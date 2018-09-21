@@ -23,9 +23,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="my-view404.html">
-<link rel="lazy-import" href="my-classification">
-<link rel="lazy-import" href="my-timeseries">
-<link rel="lazy-import" href="my-pie-chart">
+<link rel="lazy-import" href="my-classification.html">
+<link rel="lazy-import" href="my-timeseries.html">
 <dom-module id="my-app">
   <template>
     <style>
@@ -97,7 +96,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="timeseries" href="/timeseries">Time Series</a>
           <a name="classification" href="/classification">Classification</a>
-          <a name="pie-chart" href="/pie-chart">pie-chart</a>
+          
+          
         </iron-selector>
       </app-drawer>
 
@@ -118,7 +118,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             role="main">
           <my-classification name="classification"></my-classification>
           <my-timeseries name="timeseries"></my-timeseries>
-            <my-pie-chart name="pie-chart"></my-pie-chart>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>

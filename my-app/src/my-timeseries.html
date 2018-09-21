@@ -1,8 +1,8 @@
 <!-- Load the Polymer.Element base class -->
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="my-timeseries-graph.html">
- <!--<link rel="import" href="my-pie-chart.html">-->
+<link rel="import" href="../bower_components/vaadin-charts/vaadin-chart.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
 <dom-module id="my-timeseries">
   <!-- Defines the element's style and local DOM -->
   <template>
@@ -75,9 +75,20 @@
     </style>
     <!--up line and zoom are for svg-->
     <h1>Time Series Data Analysis</h1>
-   <my-timeseries-graph></my-timeseries-graph>
-   <!-- <my-draw-timeseries-graph></my-draw-timeseries-graph>-->
-   <!--<my-pie-chart url="data.csv"></my-pie-chart>-->
+    
+    <vaadin-chart type="spline" title="MOBSOS Data Analysis" timeline tooltip additional-options='{
+          "rangeSelector": {
+            "selected": 1
+          }
+        }'>
+      <vaadin-chart-series name="AAPL Stock Price" values="[[data]]"></vaadin-chart-series>
+    </vaadin-chart>
+    <iron-ajax url="./mydata/data/aapl-date-price.json" 
+               last-response="{{data}}" 
+               auto
+               on-response="_onResponse"
+
+               ></iron-ajax>
 
     <form>
         <br>
@@ -116,10 +127,17 @@
   </template>
   <script>
     // Your new element extends the Polymer.Element base class
-    class MyTimeseries extends Polymer.Element {
-      static get is() { return 'my-timeseries'; }
-    }
-    //Now, register your new custom element so the browser can use it
-    customElements.define(MyTimeseries.is, MyTimeseries);
+    // class MyTimeseries extends Polymer.Element {
+    //   static get is() { return 'my-timeseries'; }
+    // }
+    // //Now, register your new custom element so the browser can use it
+    // customElements.define(MyTimeseries.is, MyTimeseries);
+   
+    Polymer({
+      is: 'my-timeseries'
+     
+  
+
+    });
   </script>
 </dom-module>
