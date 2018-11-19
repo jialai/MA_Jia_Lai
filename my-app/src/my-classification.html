@@ -11,26 +11,329 @@
 
         padding: 16px;
       }
-    </style>
+      button.apply_button {
+        color: white;
+        background: #3f51b5;
+        border: 1px #303f94 solid;
+        box-shadow: inset 0 1px 0 #303f94;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        padding: 6px;
 
-    <h1>Classification and Time Series data Analysis</h1>
-    <paper-checkbox>Ready to deploy!</paper-checkbox>
-    <div class="card">
-      <div class="circle">2</div>
-      <h1>classification and time series data analysis</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
+      }
+
+      button.apply_button:hover {
+          border: 1px #d43913 solid;
+          box-shadow: 0 1px 1px #d43913, inset 0 1px 0 #d43913;
+          background: #dd2c00;
+      }
+
+      button.apply_button:active {
+          box-shadow: inset 0 2px 5px #2370FE;   
+      }
+
+     button {
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+
+
+
+      .nameofparameter{
+        color: #737373 ;
+        padding-top: 0px;
+        padding-right: 6px;
+        padding-bottom: 0px;
+        padding-left: 6px;
+
+      }
+      
+      .parameterBorder{
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+
+        padding-top: 0px;
+        padding-right: 6px;
+        padding-bottom: 0px;
+        padding-left: 6px;
+        margin: 1em;
+        
+      } 
+      .wrap {
+            display: -webkit-box;
+        }
+
+         .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+
+        .zoom {
+            cursor: move;
+            fill: none;
+            pointer-events: all;
+        }
+
+/*
+        input{
+          behavior:url(#default#savehistory)
+        } 
+      */
+
+    </style>
+    <!--up line and zoom are for svg-->
+    <h1 align="center">Classification and Time Series Data Analysis</h1>
+    
+   <!--  <vaadin-chart type="spline" title="MOBSOS Data Analysis" timeline tooltip additional-options='{
+          "rangeSelector": {
+            "selected": 1
+          }
+        }'>
+      <vaadin-chart-series name="AAPL Stock Price" values="[[data]]"></vaadin-chart-series>
+    </vaadin-chart>
+
+    <iron-ajax url="./mydata/data/aapl-date-price.json" 
+               last-response="{{data}}" 
+               auto
+               on-response="_onResponse"
+
+               ></iron-ajax> -->
+
+      <!--  <iron-ajax
+
+                method="post"
+                id="ajaxPostParameter"
+                url="/algorithm/parameters""
+                handle-as="json"
+                content-type="application/json"
+                on-response=_reloadData>
+        </iron-ajax>
+ -->
+    <iron-ajax
+        method="get"
+        id="ajaxGetParameter"
+        url="http://localhost:8081/algorithm/parameters?Win_Size=6&Paa_Size=6&Alphabet_Size=6&Norm_Threshold=0.01"
+        content-type="application/json"
+        handle-as="json"
+        on-response="_handleResponse">
+        
+    </iron-ajax>
+       
+         
+  <td colspan="2"> 
+    <div align="center"><b>Patterns<b><br> <textarea name="Patterns" cols="120" rows="30"></textarea>
     </div>
+  </td>
+
+
+    <form>
+        <br>
+        <br><br>
+       <!-- parameters of time series -->
+      <div class="wrap">
+
+            <div>
+                <b>Time Series:<b>
+                <label class="nameofparameter">MinSupport</label>  
+                <input class="parameterBorder" id="MinSupport"type="text" name="MinSupport",value="{{MinSupport}}">
+                
+                <span></span>
+            </div>
+            <div>
+                <label class="nameofparameter">MaxPatternLength </label>
+                <input class="parameterBorder" id="MaxPatternLength" type="text" name="MaxPatternLength", value="{{MaxPatternLength}}">
+                
+
+            </div>
+        </div>
+        <!-- parameter of classification -->
+        <div class="wrap">
+
+            <div>
+               <b> Classification:</b>
+                <label class="nameofparameter">K</label>  
+                <input class="parameterBorder" id="K"type="text" name="K",value="{{K}}">
+                
+                <span></span>
+            </div>
+            <div>
+                <label class="nameofparameter">MaxIterations</label>
+                <input class="parameterBorder" id="MaxIterations" type="text" name="MaxIterations", value="{{MaxIterations}}">
+                
+
+            </div>
+            <div>
+                <label class="nameofparameter">Runs</label>
+                <input class="parameterBorder" id="Runs" type="text" name="Runs, value="{{Runs}}">
+                
+
+            </div>
+  
+            <button class="apply_button" on-tap="_Apply">Apply</button>
+        </div>
+
+        <!--<input type="submit" value="Apply">-->
+        
+        <script>
+
+        </script>
+
+    </form>
+
+  <!--不知道为什么就是不显示，重新看data binding的例子，还有-->
+    <!-- <div class="form">
+      <form is="iron-form" id="form">
+
+        <paper-input value={{Win_Size}} label="Win_Size" name="Win_Size" required autofocus></paper-input>
+        <paper-input value={{Paa_Size}} label="Paa_Size" name="Paa_Size" required></paper-input>
+        <paper-input value={{Alphabet_Size}} label="Alphabet_Size" name="Alphabet_Size" required></paper-input>
+        <paper-input value={{Norm_Threshold}} label="Norm_Threshold" name="Norm_Threshold" required></paper-input>
+        <paper-input label="text input" value="pre-filled"></paper-input>
+       
+      </form>
+    </div>
+      
+     <button class="apply_button" on-tap="_logIn">Apply</button> -->
+
+
+     <!--可能会添加algorithm 选择的功能，不同的算法对应不同的参数选择，但是我觉的可视化部分可能就是那个样子啦，添加个颜色就好了吧-->
   </template>
   <script>
     // Your new element extends the Polymer.Element base class
-   // class MyClassification extends Polymer.Element {
-    //  static get is() { return 'my-classification'; }
-    //}
-    //Now, register your new custom element so the browser can use it
-    //customElements.define(MyClassification.is, MyClassification);
+    // class MyTimeseries extends Polymer.Element {
+    //   static get is() { return 'my-timeseries'; }
+    // }
+    // //Now, register your new custom element so the browser can use it
+    // customElements.define(MyTimeseries.is, MyTimeseries);
+   
     Polymer({
-      is: 'my-classification'
+      is: 'my-classification',
+
+      // properties: {
+      //   Win_Size: String,
+      //   password: String,
+      //   errorMessage: String,
+      //   token: {
+      //     type: String,
+      //     notify: true
+      //   }
+      // },
+     // listeners: {
+     //    'iron-form-response': '_handleLoginSuccess',
+        
+     //  },
+  
+     //   _handleLoginSuccess: function(evt) {
+     //    this.token = evt.detail.xhr.getResponseHeader('x-auth-token');
+        
+     //  }
+
+
+      _Apply: function() {
+        // window.localStorage.setItem("Win_Size",$("#Win_Size").val());
+            let self = this;
+            var MinSupport = document.getElementById("MinSupport");
+            var MaxPatternLength=document.getElementById("MaxPatternLength");
+            MinSupport.value=0.05;
+            MaxPatternLength.value=10;
+            
+
+            let para = {
+                "MinSupport": self.$.MinSupport.value,
+                "MaxPatternLength": self.$.MaxPatternLength.value,
+                
+            };
+
+
+            self.$.ajaxGetParameter.params = para;
+            self.$.ajaxGetParameter.generateRequest();
+
+          },
+          _handleResponse:function(data){
+            console.log("good");
+            var MinSupport = document.getElementById("MinSupport");
+            var MaxPatternLength=document.getElementById("MaxPatternLength");
+            
+            win_size.value=0.05;
+            paa_size.value=10;
+           
+
+
+
+          }
+
+     //    _reloadData: function() {
+     //        let self = this;
+     //        self.$.ajaxGetAllNotes.generateRequest();
+     //    },
+
+
+      //*********************************************************************************************
+       /*
+        *  这是最原始的一种做法，自己写详细的流程
+        */
+        // _Apply: function() {
+        //   var _this = this;
+        //   var form = this.$.form;
+        //   var newParameter = form.serialize();
+        //     this._ajax({
+        //       url: '/api/expenses' + (this.expense.id ? '/' + this.expense.id : ''),
+        //       method: this.expense.id ? 'PUT' : 'POST',
+        //       body: newParameter
+        //     }).then(function() {
+        //       _this.fire('expenses-updated', {message: 'Expense saved'});
+        //       _this.close();
+        //     }).catch(function(err) {
+        //       console.log(err);
+        //       _this.errorMessage = 'Save failed';
+        //     });
+          
+        // },
+
+        // _ajax: function(options) {
+        //   var _this = this;
+        //   var method = options.method || 'GET';
+        //   var url = options.url;
+
+        //   return new Promise(function(resolve, reject) {
+        //     var xhr = new XMLHttpRequest();
+        //     xhr.onreadystatechange = function() {
+        //       if (xhr.readyState === 4) {
+        //         if (xhr.status >= 200 && xhr.status < 300) {
+        //           if (xhr.responseText) {
+        //             resolve(JSON.parse(xhr.responseText));
+        //           } else {
+        //             resolve();
+        //           }
+        //         } else {
+        //           if (xhr.status == 401 || xhr.status == 403) {
+        //             _this.token = '';
+        //           }
+        //           reject({
+        //             success: false,
+        //             status: xhr.status
+        //           });
+        //         }
+        //       }
+        //     };
+
+        //     xhr.open(method, url, true);
+        //     xhr.setRequestHeader('x-auth-token', _this.token);
+        //     xhr.setRequestHeader('Content-Type', 'application/json');
+        //     if ((method === 'POST' || method === 'PUT') && options.body) {
+        //       xhr.send(JSON.stringify(options.body));
+        //     } else {
+        //       xhr.send();
+        //     }
+        //   });
+        // }
+  //*********************************************************************************************
+
     });
   </script>
 </dom-module>
