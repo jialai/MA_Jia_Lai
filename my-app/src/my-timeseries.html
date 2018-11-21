@@ -14,7 +14,7 @@
             padding: 16px;
         }
 
-        button.apply_button {
+        /*paper-button.apply_button {
             color: white;
             background: #3f51b5;
             border: 1px #303f94 solid;
@@ -27,23 +27,32 @@
 
         }
 
-        button.apply_button:hover {
+        paper-button.apply_button:hover {
             border: 1px #d43913 solid;
             box-shadow: 0 1px 1px #d43913, inset 0 1px 0 #d43913;
             background: #dd2c00;
         }
 
-        button.apply_button:active {
+        paper-button.apply_button:active {
             box-shadow: inset 0 2px 5px #2370FE;
         }
 
-        button {
+        paper-button {
             margin-left: 10px;
             margin-right: 10px;
         }
-
-
-
+*/
+              
+        paper-button{
+            color: #dd2c00;
+            background-color: #3f51b5;
+            
+        }
+        paper-button:hover{
+            color: #3f51b5;
+            background-color: #dd2c00;
+            
+        }
         .nameofparameter {
             color: #737373;
             padding-top: 0px;
@@ -83,21 +92,22 @@
             pointer-events: all;
         }
         </style>
-        <!-- <iron-ajax id="ajaxGetPatterns" auto url="http://localhost:8081/algorithm/get-patterns" method="get" params='{"MinSupport":"0.1", "MaxPatternLength":"5"}'  handle-as="json"  on-response="handleResponse" last-response="{{patterns}}">
-        </iron-ajax> -->
-        <iron-ajax id="ajaxGetPatterns" 
+        
+        <iron-ajax 
+        id="ajaxGetPatterns" 
         method="get"
-        auto url="http://localhost:8081/algorithm/parameters/get-patterns" 
-        handle-as="json" on-response="handleResponse" debounce-duration="300">
+        auto 
+        url="http://localhost:8081/algorithm/parameters/get-patterns" 
+        handle-as="json" 
+        on-response="handleResponse" 
+        debounce-duration="300"
+        last-response="{{ShowPatterns}}">
         </iron-ajax>
-        <!-- params='{{_getParams()}}' -->
-        <!--  -->
-        <!-- '{"MinSupport":"0.5", "MaxPatternLength":"5"}' -->
          
-        <!--up line and zoom are for svg-->
         <h1 align="center">Time Series Data Analysis</h1>
         <td colspan="2">
-            <div align="center"><b>Patterns<b><br> <textarea name="Patterns" cols="120" rows="30"></textarea>
+            <div align="center"><b>Patterns<b><br>
+              <textarea name="Patterns" cols="160" rows="30" value="[[ShowPatterns]]"></textarea>
             </div>
             
         </td>
@@ -109,26 +119,22 @@
         <div class="wrap">
             <div>
                 <b>Time Series:<b>
-              <!--   <label class="nameofparameter">MinSupport</label>  
-                <iron-input slot="input" bind-value="{{formData}}">
-                  <input class="parameterBorder" id="MinSupport" type="text" name="MinSupport",value="{{formData}}">
-                </iron-input> -->
+
                 <label class="nameofparameter">MinSupport </label>
-                  <iron-input slot="input" bind-value="{{formData}}">
-                <input class="parameterBorder" id="MinSupport" type="text" name="MinSupport", value="{{formData::input}}">
+                <iron-input slot="input" bind-value="{{MinSupportData}}">
+                <input class="parameterBorder" id="MinSupport" type="text" name="MinSupport", value="{{MinSupportData::input}}">
                 </iron-input>
 
                 <span></span>
             </div>
             <div>
                 <label class="nameofparameter">MaxPatternLength </label>
-                  <iron-input slot="input" bind-value="{{dataform}}">
-                <input class="parameterBorder" id="MaxPatternLength" type="text" name="MaxPatternLength", value="{{dataform::input}}">
+                <iron-input slot="input" bind-value="{{MaxPatternLengthData}}">
+                <input class="parameterBorder" id="MaxPatternLength" type="text" name="MaxPatternLength", value="{{MaxPatternLengthData::input}}">
                 </iron-input>
-                <!-- <button class="apply_button" onclick="getPatterns">Apply</button> -->
-                <paper-button raised on-tap="apply" >Apply</paper-button>
-            </div>
+                 <paper-button raised on-tap="apply">Apply</paper-button>
 
+            </div>
         </div>
 
     </form>
@@ -139,40 +145,34 @@
       static get is (){return 'my-timeseries';}
       static get properties() {
           return {
-              formData: {
+              MinSupportData: {
                 type: String,
-                value:'0.5',
+                value:'0.1',
                 notify: true,
                 reflectToAttribute: true
               },
-              dataform: {
+              MaxPatternLengthData: {
                 type: String,
-                value:'8',
+                value:'10',
                 notify: true,
                 reflectToAttribute: true
+              },
+              Patterns:{
+                type:String,
+                value:"xianshi"
               },
               error: String
           }
       }
 
       apply(){
-        // alert('start the request');
-        // self.body = '{"MinSupport":"0.3", "MaxPatternLength":"5"}';
-        alert(this.formData)
-        alert(this.dataform)
-        this.$.ajaxGetPatterns.set( 'params', {"MinSupport": this.formData, "MaxPatternLength": this.dataform});
+        // alert(this.MinSupportData)
+        // alert(this.MaxPatternLengthData)
+        this.$.ajaxGetPatterns.set( 'params', {"MinSupport": this.MinSupportData, "MaxPatternLength": this.MaxPatternLengthData});
         this.$.ajaxGetPatterns.generateRequest();
       }
-      // _getParams() {
-      //   // var mins = document.querySelector('#MinSupport').value
-      //   // var maxl = document.querySelector('#MaxPatternLength').value
-
-      //   // console.log(mins);
-      //   // alert(this.$.MinSupport.value)
-      //   alert(this.formData)
-      //  return {"MinSupport": this.formData, "MaxPatternLength": this.dataform};
-      // }
+      
     }
     window.customElements.define(MyTimeseries.is,MyTimeseries);
-  </script>>
+  </script>
 </dom-module>

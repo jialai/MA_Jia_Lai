@@ -1,7 +1,9 @@
 <!-- Load the Polymer.Element base class -->
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
-
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <dom-module id="my-classification">
   <!-- Defines the element's style and local DOM -->
   <template>
@@ -11,7 +13,7 @@
 
         padding: 16px;
       }
-      button.apply_button {
+      /*button.apply_button {
         color: white;
         background: #3f51b5;
         border: 1px #303f94 solid;
@@ -37,8 +39,19 @@
      button {
           margin-left: 10px;
           margin-right: 10px;
-        }
+        }*/
 
+          
+        paper-button{
+            color: #dd2c00;
+            background-color: #3f51b5;
+            
+        }
+        paper-button:hover{
+            color: #3f51b5;
+            background-color: #dd2c00;
+            
+        }
 
 
       .nameofparameter{
@@ -78,55 +91,40 @@
             fill: none;
             pointer-events: all;
         }
-
-/*
-        input{
-          behavior:url(#default#savehistory)
-        } 
-      */
+        blockquote {
+        border-left: 4px solid #eee;
+        margin-left: 4px;
+        padding-left: 20px;
+      }
 
     </style>
+
+    <iron-ajax 
+        id="ajaxGetClusterPatterns" 
+        method="get"
+        auto 
+        url="http://localhost:8081/algorithm/parameters/get-clusters-patterns" 
+        handle-as="text" 
+        last-response="{{showClusterPatterns}}"
+        on-response="handleResponse"
+        debounce-duration="300">
+    </iron-ajax>
+
     <!--up line and zoom are for svg-->
     <h1 align="center">Classification and Time Series Data Analysis</h1>
-    
    <!--  <vaadin-chart type="spline" title="MOBSOS Data Analysis" timeline tooltip additional-options='{
           "rangeSelector": {
             "selected": 1
           }
         }'>
       <vaadin-chart-series name="AAPL Stock Price" values="[[data]]"></vaadin-chart-series>
-    </vaadin-chart>
+    </vaadin-chart> -->
 
-    <iron-ajax url="./mydata/data/aapl-date-price.json" 
-               last-response="{{data}}" 
-               auto
-               on-response="_onResponse"
-
-               ></iron-ajax> -->
-
-      <!--  <iron-ajax
-
-                method="post"
-                id="ajaxPostParameter"
-                url="/algorithm/parameters""
-                handle-as="json"
-                content-type="application/json"
-                on-response=_reloadData>
-        </iron-ajax>
- -->
-    <iron-ajax
-        method="get"
-        id="ajaxGetParameter"
-        url="http://localhost:8081/algorithm/parameters?Win_Size=6&Paa_Size=6&Alphabet_Size=6&Norm_Threshold=0.01"
-        content-type="application/json"
-        handle-as="json"
-        on-response="_handleResponse">
-        
-    </iron-ajax>
+   
        
          
   <td colspan="2"> 
-    <div align="center"><b>Patterns<b><br> <textarea name="Patterns" cols="120" rows="30"></textarea>
+    <div align="margin-left"><b>Patterns<b><br> <textarea id="showPattern" name="Patterns" cols="100" rows="30" value="[[showClusterPatterns]]"></textarea>
     </div>
   </td>
 
@@ -134,55 +132,60 @@
     <form>
         <br>
         <br><br>
+
        <!-- parameters of time series -->
+
       <div class="wrap">
 
             <div>
                 <b>Time Series:<b>
-                <label class="nameofparameter">MinSupport</label>  
-                <input class="parameterBorder" id="MinSupport"type="text" name="MinSupport",value="{{MinSupport}}">
+                <label class="nameofparameter">MinSupport </label>
+                <iron-input slot="input" bind-value="{{ClusterMinSupportData}}">
+                <input class="parameterBorder" id="ClusterMinSupport" type="text" name="ClusterMinSupport", value="{{ClusterMinSupportData::input}}">
+                </iron-input>
                 
                 <span></span>
             </div>
             <div>
                 <label class="nameofparameter">MaxPatternLength </label>
-                <input class="parameterBorder" id="MaxPatternLength" type="text" name="MaxPatternLength", value="{{MaxPatternLength}}">
+                  <iron-input slot="input" bind-value="{{ClusterMaxPatternLengthData}}">
+                <input class="parameterBorder" id="ClusterMaxPatternLength" type="text" name="ClusterMaxPatternLength", value="{{ClusterMaxPatternLengthData::input}}">
+                </iron-input>
                 
 
             </div>
         </div>
+
         <!-- parameter of classification -->
         <div class="wrap">
 
             <div>
                <b> Classification:</b>
-                <label class="nameofparameter">K</label>  
-                <input class="parameterBorder" id="K"type="text" name="K",value="{{K}}">
+                <label class="nameofparameter">K</label> 
+                <iron-input slot="input" bind-value="{{KData}}">
+                <input class="parameterBorder" id="K" type="text" name="K", value="{{KData::input}}">
+                </iron-input>
                 
-                <span></span>
             </div>
+
             <div>
                 <label class="nameofparameter">MaxIterations</label>
-                <input class="parameterBorder" id="MaxIterations" type="text" name="MaxIterations", value="{{MaxIterations}}">
-                
+                <iron-input slot="input" bind-value="{{MaxIterationsData}}">
+                <input class="parameterBorder" id="MaxIterations" type="text" name="MaxIterations", value="{{MaxIterationsData::input}}">
+                </iron-input>
 
             </div>
             <div>
                 <label class="nameofparameter">Runs</label>
-                <input class="parameterBorder" id="Runs" type="text" name="Runs, value="{{Runs}}">
-                
+                <iron-input slot="input" bind-value="{{RunsData}}">
+                <input class="parameterBorder" id="Runs" type="text" name="Runs", value="{{RunsData::input}}">
+                </iron-input>
 
             </div>
   
-            <button class="apply_button" on-tap="_Apply">Apply</button>
+            <paper-button raised on-tap="ClusterApply"> Apply </paper-button>
         </div>
-
-        <!--<input type="submit" value="Apply">-->
         
-        <script>
-
-        </script>
-
     </form>
 
   <!--不知道为什么就是不显示，重新看data binding的例子，还有-->
@@ -204,136 +207,60 @@
      <!--可能会添加algorithm 选择的功能，不同的算法对应不同的参数选择，但是我觉的可视化部分可能就是那个样子啦，添加个颜色就好了吧-->
   </template>
   <script>
-    // Your new element extends the Polymer.Element base class
-    // class MyTimeseries extends Polymer.Element {
-    //   static get is() { return 'my-timeseries'; }
-    // }
-    // //Now, register your new custom element so the browser can use it
-    // customElements.define(MyTimeseries.is, MyTimeseries);
-   
-    Polymer({
-      is: 'my-classification',
-
-      // properties: {
-      //   Win_Size: String,
-      //   password: String,
-      //   errorMessage: String,
-      //   token: {
-      //     type: String,
-      //     notify: true
-      //   }
-      // },
-     // listeners: {
-     //    'iron-form-response': '_handleLoginSuccess',
-        
-     //  },
-  
-     //   _handleLoginSuccess: function(evt) {
-     //    this.token = evt.detail.xhr.getResponseHeader('x-auth-token');
-        
-     //  }
-
-
-      _Apply: function() {
-        // window.localStorage.setItem("Win_Size",$("#Win_Size").val());
-            let self = this;
-            var MinSupport = document.getElementById("MinSupport");
-            var MaxPatternLength=document.getElementById("MaxPatternLength");
-            MinSupport.value=0.05;
-            MaxPatternLength.value=10;
-            
-
-            let para = {
-                "MinSupport": self.$.MinSupport.value,
-                "MaxPatternLength": self.$.MaxPatternLength.value,
-                
-            };
-
-
-            self.$.ajaxGetParameter.params = para;
-            self.$.ajaxGetParameter.generateRequest();
-
-          },
-          _handleResponse:function(data){
-            console.log("good");
-            var MinSupport = document.getElementById("MinSupport");
-            var MaxPatternLength=document.getElementById("MaxPatternLength");
-            
-            win_size.value=0.05;
-            paa_size.value=10;
-           
-
-
-
+  class MyClassification extends Polymer.Element{
+      static get is (){return 'my-classification';}
+      static get properties() {
+          return {
+              ClusterMinSupportData: {
+                type: String,
+                value:'0.1',
+                notify: true,
+                reflectToAttribute: true
+              },
+              ClusterMaxPatternLengthData: {
+                type: String,
+                value:'10',
+                notify: true,
+                reflectToAttribute: true
+              },
+               KData: {
+                type: String,
+                value:'10',
+                notify: true,
+                reflectToAttribute: true
+              },
+               MaxIterationsData: {
+                type: String,
+                value:'5',
+                notify: true,
+                reflectToAttribute: true
+              },
+               RunsData: {
+                type: String,
+                value:'10',
+                notify: true,
+                reflectToAttribute: true
+              },
+              error: String
           }
+      }
 
-     //    _reloadData: function() {
-     //        let self = this;
-     //        self.$.ajaxGetAllNotes.generateRequest();
-     //    },
+      ClusterApply(){
+        // alert(this.MinSupportData)
+        // alert(this.ClusterMaxPatternLengthData)
+        this.$.ajaxGetClusterPatterns.set( 'params', {"ClusterMinSupport": this.ClusterMinSupportData, "ClusterMaxPatternLength": this.ClusterMaxPatternLengthData,"K":this.KData,"MaxIterations":this.MaxIterationsData,"Runs":this.RunsData});
+        this.$.ajaxGetClusterPatterns.generateRequest();
+       
+      }
+      // handleResponse(){
+      //   alert("handleResponse");
+      // }
 
-
-      //*********************************************************************************************
-       /*
-        *  这是最原始的一种做法，自己写详细的流程
-        */
-        // _Apply: function() {
-        //   var _this = this;
-        //   var form = this.$.form;
-        //   var newParameter = form.serialize();
-        //     this._ajax({
-        //       url: '/api/expenses' + (this.expense.id ? '/' + this.expense.id : ''),
-        //       method: this.expense.id ? 'PUT' : 'POST',
-        //       body: newParameter
-        //     }).then(function() {
-        //       _this.fire('expenses-updated', {message: 'Expense saved'});
-        //       _this.close();
-        //     }).catch(function(err) {
-        //       console.log(err);
-        //       _this.errorMessage = 'Save failed';
-        //     });
-          
-        // },
-
-        // _ajax: function(options) {
-        //   var _this = this;
-        //   var method = options.method || 'GET';
-        //   var url = options.url;
-
-        //   return new Promise(function(resolve, reject) {
-        //     var xhr = new XMLHttpRequest();
-        //     xhr.onreadystatechange = function() {
-        //       if (xhr.readyState === 4) {
-        //         if (xhr.status >= 200 && xhr.status < 300) {
-        //           if (xhr.responseText) {
-        //             resolve(JSON.parse(xhr.responseText));
-        //           } else {
-        //             resolve();
-        //           }
-        //         } else {
-        //           if (xhr.status == 401 || xhr.status == 403) {
-        //             _this.token = '';
-        //           }
-        //           reject({
-        //             success: false,
-        //             status: xhr.status
-        //           });
-        //         }
-        //       }
-        //     };
-
-        //     xhr.open(method, url, true);
-        //     xhr.setRequestHeader('x-auth-token', _this.token);
-        //     xhr.setRequestHeader('Content-Type', 'application/json');
-        //     if ((method === 'POST' || method === 'PUT') && options.body) {
-        //       xhr.send(JSON.stringify(options.body));
-        //     } else {
-        //       xhr.send();
-        //     }
-        //   });
-        // }
-  //*********************************************************************************************
-
-    });
+     
+      
+    }
+    window.customElements.define(MyClassification.is,MyClassification);
+ 
+   
   </script>
 </dom-module>
