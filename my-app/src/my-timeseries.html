@@ -46,6 +46,7 @@
         paper-button{
             color: #dd2c00;
             background-color: #3f51b5;
+            color: white;
             
         }
         paper-button:hover{
@@ -132,9 +133,32 @@
                 <iron-input slot="input" bind-value="{{MaxPatternLengthData}}">
                 <input class="parameterBorder" id="MaxPatternLength" type="text" name="MaxPatternLength", value="{{MaxPatternLengthData::input}}">
                 </iron-input>
-                 <paper-button raised on-tap="apply">Apply</paper-button>
+                
 
             </div>
+        </div>
+
+         <div class="wrap">
+
+            <div>
+               <b>Pattern Property:</b>
+                <label class="nameofparameter">Length</label> 
+                <iron-input slot="input" bind-value="{{LengthData}}">
+                <input class="parameterBorder" id="Length" type="text" name="Length", value="{{LengthData::input}}">
+                </iron-input>
+                
+            </div>
+
+            <div>
+                <label class="nameofparameter">Number Of Patterns</label>
+                <iron-input slot="input" bind-value="{{NumberOfPatternsData}}">
+                <input class="parameterBorder" id="NumberOfPatterns" type="text" name="NumberOfPatterns", value="{{NumberOfPatternsData::input}}">
+                </iron-input>
+
+            </div>
+            
+             <paper-button raised on-tap="apply" >Apply</paper-button>
+            
         </div>
 
     </form>
@@ -161,6 +185,18 @@
                 type:String,
                 value:"xianshi"
               },
+              LengthData:{
+                type:String,
+                value:"all",
+                notify: true,
+                reflectToAttribute: true
+              },
+              NumberOfPatternsData:{
+                type:String,
+                value:"all" ,
+                notify: true,
+                reflectToAttribute: true
+              },
               error: String
           }
       }
@@ -168,7 +204,7 @@
       apply(){
         // alert(this.MinSupportData)
         // alert(this.MaxPatternLengthData)
-        this.$.ajaxGetPatterns.set( 'params', {"MinSupport": this.MinSupportData, "MaxPatternLength": this.MaxPatternLengthData});
+        this.$.ajaxGetPatterns.set( 'params', {"MinSupport": this.MinSupportData, "MaxPatternLength": this.MaxPatternLengthData, "Length": this.LengthData, "NumberOfPatterns": this.NumberOfPatternsData});
         this.$.ajaxGetPatterns.generateRequest();
       }
       

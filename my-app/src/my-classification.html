@@ -42,16 +42,16 @@
         }*/
 
           
-        paper-button{
-            color: #dd2c00;
-            background-color: #3f51b5;
+      paper-button{
+        color: #dd2c00;
+        background-color: #3f51b5;
             
         }
-        paper-button:hover{
-            color: #3f51b5;
-            background-color: #dd2c00;
+      paper-button:hover{
+        color: #3f51b5;
+        background-color: #dd2c00;
             
-        }
+      }
 
 
       .nameofparameter{
@@ -77,25 +77,27 @@
         
       } 
       .wrap {
-            display: -webkit-box;
+        display: -webkit-box;
         }
 
-         .line {
-            fill: none;
-            stroke: steelblue;
-            stroke-width: 1.5px;
-        }
+      .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5px;
+      }
 
-        .zoom {
+      .zoom {
             cursor: move;
             fill: none;
             pointer-events: all;
-        }
+      }
         blockquote {
         border-left: 4px solid #eee;
         margin-left: 4px;
         padding-left: 20px;
       }
+
+
 
     </style>
 
@@ -124,11 +126,19 @@
        
          
   <td colspan="2"> 
-    <div align="margin-left"><b>Patterns<b><br> <textarea id="showPattern" name="Patterns" cols="100" rows="30" value="[[showClusterPatterns]]"></textarea>
-    </div>
+    <div class="wrap">
+    
+      <div id="patternsPosition"  align="margin-left"><b>Patterns<b><br> 
+        <textarea id="showPattern" name="Patterns" cols="100" rows="30" value="[[showClusterPatterns]]"></textarea>
+      </div>
+
+      <div id="clusterPosition"  ><p>Cluster Visualization<p></div>
+   </div> 
   </td>
 
-
+    
+    <!-- <div style="width:300px; height:auto; float:left; display:inline">AAAA</div>  -->
+ 
     <form>
         <br>
         <br><br>
@@ -183,29 +193,34 @@
 
             </div>
   
-            <paper-button raised on-tap="ClusterApply"> Apply </paper-button>
+        </div>
+        <!--parameter of pattern property-->
+        <div class="wrap">
+
+            <div>
+               <b>Pattern Property:</b>
+                <label class="nameofparameter">Length</label> 
+                <iron-input slot="input" bind-value="{{LengthData}}">
+                <input class="parameterBorder" id="Length" type="text" name="Length", value="{{LengthData::input}}">
+                </iron-input>
+                
+            </div>
+
+            <div>
+                <label class="nameofparameter">Number Of Patterns</label>
+                <iron-input slot="input" bind-value="{{NumberOfPatternsData}}">
+                <input class="parameterBorder" id="NumberOfPatterns" type="text" name="NumberOfPatterns", value="{{NumberOfPatternsData::input}}">
+                </iron-input>
+
+            </div>
+            
+            <paper-button raised on-tap="ClusterApply"> Apply </paper-button>            
         </div>
         
     </form>
 
-  <!--不知道为什么就是不显示，重新看data binding的例子，还有-->
-    <!-- <div class="form">
-      <form is="iron-form" id="form">
-
-        <paper-input value={{Win_Size}} label="Win_Size" name="Win_Size" required autofocus></paper-input>
-        <paper-input value={{Paa_Size}} label="Paa_Size" name="Paa_Size" required></paper-input>
-        <paper-input value={{Alphabet_Size}} label="Alphabet_Size" name="Alphabet_Size" required></paper-input>
-        <paper-input value={{Norm_Threshold}} label="Norm_Threshold" name="Norm_Threshold" required></paper-input>
-        <paper-input label="text input" value="pre-filled"></paper-input>
-       
-      </form>
-    </div>
-      
-     <button class="apply_button" on-tap="_logIn">Apply</button> -->
-
-
-     <!--可能会添加algorithm 选择的功能，不同的算法对应不同的参数选择，但是我觉的可视化部分可能就是那个样子啦，添加个颜色就好了吧-->
   </template>
+
   <script>
   class MyClassification extends Polymer.Element{
       static get is (){return 'my-classification';}
@@ -241,6 +256,18 @@
                 notify: true,
                 reflectToAttribute: true
               },
+              LengthData:{
+                type:String,
+                value:"all",
+                notify: true,
+                reflectToAttribute: true
+              },
+              NumberOfPatternsData:{
+                type:String,
+                value:"all" ,
+                notify: true,
+                reflectToAttribute: true
+              },
               error: String
           }
       }
@@ -248,7 +275,7 @@
       ClusterApply(){
         // alert(this.MinSupportData)
         // alert(this.ClusterMaxPatternLengthData)
-        this.$.ajaxGetClusterPatterns.set( 'params', {"ClusterMinSupport": this.ClusterMinSupportData, "ClusterMaxPatternLength": this.ClusterMaxPatternLengthData,"K":this.KData,"MaxIterations":this.MaxIterationsData,"Runs":this.RunsData});
+        this.$.ajaxGetClusterPatterns.set( 'params', {"ClusterMinSupport": this.ClusterMinSupportData, "ClusterMaxPatternLength": this.ClusterMaxPatternLengthData,"K":this.KData,"MaxIterations":this.MaxIterationsData,"Runs":this.RunsData, "Length": this.LengthData, "NumberOfPatterns": this.NumberOfPatternsData});
         this.$.ajaxGetClusterPatterns.generateRequest();
        
       }
